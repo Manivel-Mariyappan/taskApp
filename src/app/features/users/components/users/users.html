@@ -1,1 +1,45 @@
-<p>users works!</p>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Users</h2>
+
+            @if((loading$ | async)) {
+            <div class="alert alert-info">Loading users...</div>
+            }
+
+            @let users = (users$ | async);
+            @if(users) {
+            @if(users.length > 0) {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(user of users; track user.id) {
+                    <tr>
+                        <td>{{ user.firstName }}</td>
+                        <td>{{ user.lastName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" (click)="deleteUser(user.id)">Delete</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            } @else {
+            <div class="alert alert-warning">No users found.</div>
+            }
+            }
+        </div>
+    </div>
+</div>
+
+<app-create-user></app-create-user>

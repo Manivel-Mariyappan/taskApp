@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { USER_ROLES } from '../../constants/user-const';
+import { createUserSuccess } from '../../store/user.action';
+import { User } from '../../store/user.action';
 
 
 @Component({
@@ -17,7 +20,7 @@ export class CreateUser {
 
   submitted = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private store: Store) {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -32,7 +35,9 @@ export class CreateUser {
       this.userForm.markAllAsTouched();
       return;
     }
-    console.log('Form submitted:', this.userForm.value);
-    // TODO: Call service to create user
+    const user: User = this.userForm.value;
+
+    this.store.dispatch(createUserSuccess({ user }));
+    this.userForm.reset();
   }
 }
